@@ -443,7 +443,8 @@ export default function SMEAdvantagePage() {
                   August 15, 2047 — India@100
                 </p>
               </div>
-            </FadeIn>
+            </div>
+          </FadeIn>
 
           <FadeIn delay={0.5}>
             <div className="flex flex-wrap gap-4 justify-start">
