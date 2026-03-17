@@ -1,26 +1,270 @@
+@import "@fontsource/sora/400.css";
+@import "@fontsource/sora/600.css";
+@import "@fontsource/sora/700.css";
+@import "@fontsource/sora/800.css";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --cyan: #00F2FF;
+  --cyan-dim: rgba(0, 242, 255, 0.15);
+  --cyan-glow: rgba(0, 242, 255, 0.4);
+  --gold: #FF9933;
+  --gold-dim: rgba(255, 153, 51, 0.15);
+  --space: #0A192F;
+  --space-light: #0D2137;
+  --space-mid: #112240;
+  --glass: rgba(13, 33, 55, 0.6);
+  --border: rgba(0, 242, 255, 0.12);
+  --border-hover: rgba(0, 242, 255, 0.5);
+  --text-primary: #E6F1FF;
+  --text-secondary: rgba(136, 146, 176, 0.7); /* 70% opacity */
+  --text-muted: rgba(74, 85, 104, 0.7);      /* 70% opacity */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--space);
+  color: var(--text-primary);
+  font-family: "Inter", sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Sora", sans-serif;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--space); }
+::-webkit-scrollbar-thumb { background: var(--cyan-dim); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+
+/* SVG Grid background */
+.svg-grid {
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Glassmorphism */
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+}
+
+.glass-hover {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  will-change: border-color, box-shadow;
+}
+
+.glass-hover:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 0 30px var(--cyan-dim), inset 0 0 30px rgba(0, 242, 255, 0.03);
+  background: rgba(13, 33, 55, 0.75);
+}
+
+/* Cyan glow button */
+.btn-cyan {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, var(--cyan), #00B4D8);
+  color: var(--space);
+  font-family: "Sora", sans-serif;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-cyan::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(135deg, var(--cyan), #00B4D8);
+  filter: blur(12px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+  border-radius: inherit;
+}
+
+.btn-cyan:hover::before { opacity: 0.7; }
+.btn-cyan:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 40px var(--cyan-glow), 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Text gradients */
+.text-gradient-cyan {
+  background: linear-gradient(135deg, var(--cyan), #48CAE4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, var(--gold), #FFBA08);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Border draw animation on hover */
+.bento-tile {
+  position: relative;
+  overflow: hidden;
+}
+
+.bento-tile::before,
+.bento-tile::after {
+  content: '';
+  position: absolute;
+  background: var(--cyan);
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.bento-tile::before {
+  top: 0; left: 0;
+  height: 1px; width: 0;
+}
+
+.bento-tile::after {
+  bottom: 0; right: 0;
+  height: 1px; width: 0;
+}
+
+.bento-tile:hover::before { width: 100%; }
+.bento-tile:hover::after { width: 100%; }
+
+/* Pulsing animation */
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-8px) rotate(1deg); }
+  66% { transform: translateY(-4px) rotate(-1deg); }
+}
+
+.float-anim {
+  animation: float 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes ken-burns {
+  0% { transform: scale(1) translate3d(0, 0, 0); }
+  100% { transform: scale(1.08) translate3d(-10px, 0, 0); }
+}
+
+.ken-burns {
+  animation: ken-burns 30s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+  will-change: opacity;
+}
+
+@keyframes path-dash {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes dot-travel {
+  0% { offset-distance: 0%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+
+/* WhatsApp float button */
+.whatsapp-btn {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 9999;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #25D366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 24px rgba(37,211,102,0.4);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+}
+
+.whatsapp-btn:hover {
+  transform: scale(1.12) translateY(-4px);
+  box-shadow: 0 8px 40px rgba(37,211,102,0.6);
+}
+
+/* Selection */
+::selection {
+  background: var(--cyan-dim);
+  color: var(--cyan);
+}
+
+/* Step form */
+.step-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.step-dot.active {
+  background: var(--cyan);
+  box-shadow: 0 0 12px var(--cyan-glow);
+  transform: scale(1.4);
+}
+
+.step-dot.inactive {
+  background: var(--text-muted);
+}
+
+/* Countdown */
+.countdown-block {
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 24px;
+  text-align: center;
+  min-width: 90px;
 }
